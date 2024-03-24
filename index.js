@@ -78,6 +78,7 @@ app.get("/files", verifyToken, async (req, res) => {
     });
   }
   const fileListElement = listOfFiles
+    .filter(({ name }) => !name.startsWith("."))
     .sort((a, b) => {
       if (a.isDirectory && !b.isDirectory) return -1;
     })
