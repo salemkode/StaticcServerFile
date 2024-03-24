@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>List of Files</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-gray-100 p-4">
+    <div class="flex flex-warp justify-center gap-3 mx-auto pt-16">
+      <div class="max-w-lg w-full px-2">
+        <ul class="border-2 rounded-lg overflow-hidden">
+          #disks
+        </ul>
+      </div>
+      <div class="max-w-lg w-full px-2">
+        <div
+          class="border border-dashed border-gray-300 px-5 p-2 py-6 rounded-lg"
+        >
+          <label for="file" class="py-4 block cursor-pointer">
+            Drag and drop files of
+            <span class="font-bold underline">Choose file</span>
+          </label>
+
+          <form
+            action="/upload"
+            method="post"
+            enctype="multipart/form-data"
+            class="flex flex-col gap-3"
+          >
+            <input
+              type="file"
+              name="file"
+              id="file"
+              multiple
+              class="hidden"
+              onchange="uploadFiles()"
+            />
+            <ul id="file-list"></ul>
+            <input
+              type="submit"
+              value="Upload"
+              disabled
+              class="inline-flex justify-center text-sm font-semibold py-3 px-4 bg-slate-700 rounded-lg text-white hover:bg-slate-600 transition"
+            />
+          </form>
+        </div>
+        <br />
+        <ul class="border-2 rounded-lg overflow-hidden">
+          #files
+        </ul>
+      </div>
+
+      <div id="container" class="max-w-lg px-6 w-20"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/0.6.1/progressbar.min.js"></script>
+    <script>
+      document.querySelectorAll(".progress").forEach((element) => {
+        const pie = new ProgressBar.Circle(element, {
+          strokeWidth: 50,
+          easing: "easeInOut",
+          duration: 1400,
+          color: "#cccccc",
+          trailColor: "#ffffff00",
+          trailWidth: 1,
+          svgStyle: null,
+        });
+        const progress = parseInt(element.dataset.progress || "0");
+        pie.animate(progress / 100);
+      });
+
+      const formatSizeUnits = (bytes) => {
+        if (bytes >= 1073741824) {
+          bytes = (bytes / 1073741824).toFixed(2) + " GB";
+        } else if (bytes >= 1048576) {
+          bytes = (bytes / 1048576).toFixed(2) + " MB";
+        } else if (bytes >= 1024) {
+          bytes = (bytes / 1024).toFixed(2) + " KB";
+        } else if (bytes > 1) {
+          bytes = bytes + " bytes";
+        } else if (bytes == 1) {
+          bytes = bytes + " byte";
+        } else {
+          bytes = "0 bytes";
+        }
+        return bytes;
+      };
+
+      function uploadFiles() {
+        const fileList = document.getElementById("file").files;
+        console.log(fileList);
+        const listContainer = document.getElementById("file-list");
+        listContainer.innerHTML = "";
+
+        for (let i = 0; i < fileList.length; i++) {
+          const listItem = document.createElement("li");
+          listItem.className = "flex justify-between";
+          listItem.innerHTML = `<span>${fileList[i].name}</span> <span>${formatSizeUnits(fileList[i].size)}</span>`;
+          listContainer.appendChild(listItem);
+        }
+      }
+    </script>
+  </body>
+</html>
