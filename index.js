@@ -15,9 +15,8 @@ import {
 import { getStorageDevices } from "./status.js";
 import multer from "multer";
 
-const ADMIN_PASSWORD =
-  "$2b$10$rHEDwpSJsMjlZNZcRiTtZOyvNKcnoC1qngYA4pNfc0jurzS/ok9CW";
-const JWT_KEY = "tsZ64cUquq8zkFXUaGNakxma";
+const ADMIN_HASH_PASSWORD = process.env.ADMIN_HASH_PASSWORD;
+const JWT_KEY = process.env.JWT_KEY;
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies.auth;
@@ -45,7 +44,7 @@ app.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
     const userMatch = username === "salemkode";
-    const passwordMatch = await bcrypt.compare(password, ADMIN_PASSWORD);
+    const passwordMatch = await bcrypt.compare(password, ADMIN_HASH_PASSWORD);
 
     if (!userMatch && !passwordMatch) {
       return res.status(401).json({ error: "Authentication failed" });
